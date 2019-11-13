@@ -21,7 +21,7 @@ You can run `node bamazonManager.js` to:
 
 
 ### View Demo of Project
-[Heroku App](http://github.com/mwigdahl)
+[Heroku App](https://friend-finder-mwig.herokuapp.com/)
 
 ### Maintainer Information
 * Creator: Matt Wigdahl
