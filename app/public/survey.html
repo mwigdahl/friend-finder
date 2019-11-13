@@ -3,23 +3,25 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Friend Finder</title>
-        <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <script src="https://code.jquery.com/jquery.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     </head>
     <body>
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+              <h2 class="display-4 text-center">Survey Questions</h2>
+              <p class="lead text-center">Answer these question below to find your match!</p>
+            </div>
+          </div>
         <div class="container">
-
-            <h2>Survey Questions</h2>
-            <hr>
         
             <h3><strong>About You</strong></h3>
             <h4>Name (Required)</h4>
             <input type="text" id="name" class="form-control" required>
         
-            <h4>Link to Photo Image (Required)</h4>
+            <h4>URL Link to Photo Image (Required)</h4>
             <input type="text" id="photo" class="form-control" required>
         
             <hr>
@@ -72,7 +74,7 @@
         
         
             <h3><strong>Question #5</strong></h3>
-            <h4>Being around people is important.</h4>
+            <h4>Your favorite instrument is a guitar.</h4>
             <select class="chosen-select" id="q5">
               <option value=""></option>
               <option value="1">1 (Strongly Disagree)</option>
@@ -84,7 +86,7 @@
         
         
             <h3><strong>Question #6</strong></h3>
-            <h4>Need Question</h4>
+            <h4>You love to listen to music.</h4>
             <select class="chosen-select" id="q6">
               <option value=""></option>
               <option value="1">1 (Strongly Disagree)</option>
@@ -96,7 +98,7 @@
         
         
             <h3><strong>Question #7</strong></h3>
-            <h4>Need another quetion</h4>
+            <h4>I like beer more than wine.</h4>
             <select class="chosen-select" id="q7">
               <option value=""></option>
               <option value="1">1 (Strongly Disagree)</option>
@@ -107,7 +109,7 @@
             </select>
         
             <h3><strong>Question #8</strong></h3>
-            <h4>You rarely get carried away by fantasies and ideas.</h4>
+            <h4>I love sunny days.</h4>
             <select class="chosen-select" id="q8">
               <option value=""></option>
               <option value="1">1 (Strongly Disagree)</option>
@@ -118,7 +120,7 @@
             </select>
         
             <h3><strong>Question #9</strong></h3>
-            <h4>Need another one.</h4>
+            <h4>I'd rather ride a bike than drive a car.</h4>
             <select class="chosen-select" id="q9">
               <option value=""></option>
               <option value="1">1 (Strongly Disagree)</option>
@@ -129,7 +131,7 @@
             </select>
         
             <h3><strong>Question #10</strong></h3>
-            <h4>Last one.</h4>
+            <h4>Sushi is better than pasta.</h4>
             <select class="chosen-select" id="q10">
               <option value=""></option>
               <option value="1">1 (Strongly Disagree)</option>
@@ -142,9 +144,8 @@
             <br>
             <br>
         
-            <!-- Submit Button -->
             <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit"><i class="fa fa-check-circle" aria-hidden="true"></i>
-             Submit</button>
+             Find your best match</button>
         
             <hr>
             <footer class="footer">
@@ -152,8 +153,62 @@
                 <p><a href="/api/friends">API Friends List</a> | <a href="https://github.com/mwigdahl/friend-finder">GitHub Repo</a></p>
               </div>
             </footer>
+
+<div class="modal fade" id="matchModal" tabindex="-1" role="dialog" aria-labelledby="matchModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="matchModalLabel">Your best match is:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4 id="match-name"></h4>
+        <div><img id="match-photo" src="" width="100" /></div>  
+      </div>
+    </div>
+  </div>
+</div>
         
           </div>
-        
+          <script type="text/javascript">
+            $("#submit").on("click", function(event) {
+
+              event.preventDefault();
+              // creating new object of form data
+              var newFriend = {
+                  "name": $("#name").val().trim(),
+                  "photo":$("#photo").val().trim(),
+                  "scores":[
+                    $("#q1").val(),
+                    $("#q2").val(),
+                    $("#q3").val(),
+                    $("#q4").val(),
+                    $("#q5").val(),
+                    $("#q6").val(),
+                    $("#q7").val(),
+                    $("#q8").val(),
+                    $("#q9").val(),
+                    $("#q10").val()
+                    ]
+              };
+              // send new friend data to friend array
+            $.post("/api/friends", newFriend,
+            function(data) {
+              //show returned match data to modal
+                $("#match-name").text(data.name);
+                $("#match-photo").attr("src", data.photo);
+
+                showBestMatch();
+            });
+
+            });
+
+            //trigger the match modal automatically
+            function showBestMatch() {
+              $("#matchModal").modal('show');
+            };
+          </script>
     </body>
 </html>
